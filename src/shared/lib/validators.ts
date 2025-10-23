@@ -10,9 +10,10 @@ export const loginSchema = z.object({
 
 export const registerSchema = loginSchema
   .extend({
-    confirmPassword: z.string().min(1, "Confirme sua senha."),
+    confirmPassword: z.string().min(1, "Repita sua senha."),
+    name: z.string().min(1, "O nome é obrigatório."),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.confirmPassword === data.password, {
     message: "As senhas não coincidem.",
     path: ["confirmPassword"],
   });

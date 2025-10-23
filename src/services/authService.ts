@@ -1,13 +1,44 @@
-import { setAuthToken } from "@/lib/cookies";
-import { mockUsers } from "@/mock/users";
+import { mockUsers } from "@/shared/mock/users";
+import type {
+  AuthenticatedUser,
+  RegisterUser,
+  User,
+} from "@/shared/types/users";
 
-export async function authenticateUser(email: string, password: string) {
-  const user = mockUsers.find(
-    (user) => user.email === email && user.password === password
-  );
-  if (!user) throw new Error("Usuário ou senha inválidos.");
+export async function registerUser(
+  userData: RegisterUser
+): Promise<AuthenticatedUser> {
+  const existingUser = mockUsers.find((u) => u.email === userData.email);
+  if (existingUser) {
+    throw new Error("E-mail já cadastrado");
+  }
 
-  const SimulatedToken = "Token";
-  setAuthToken(SimulatedToken);
-  return { email: user.email, name: user.name, token: SimulatedToken };
+  const newUser: User = {
+    id: crypto.randomUUID(),
+    email: userData.email,
+    password: userData.password,
+    name: userData.name,
+  };
+
+  mockUsers.push(newUser);
+  const token = "TokenSimulado";
+
+  return {
+    id: newUser.id,
+    email: newUser.email,
+    name: newUser.name,
+    token,
+  };
+}
+
+export async function authenticateUser(
+  email: string,
+  password: string
+): Promise<AuthenticatedUser> {
+  const user = mockUsers.find((u) => u.email === email);
+  if (!user) throw new Error("Usuário não encontrado");
+  if (user.password !== password) throw new Error("Senha incorreta");
+
+  const token = "TokenSimulado";
+  return { id: user.id, email: user.email, name: user.name, token };
 }

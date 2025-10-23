@@ -8,10 +8,9 @@ import {
   registerSchema,
   LoginFormValues,
   RegisterFormValues,
-} from "@/lib/validators";
+} from "@/shared/lib/validators";
 import * as authService from "@/services/authService";
 import { useRouter } from "next/navigation";
-
 import {
   Card,
   CardHeader,
@@ -30,6 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { setAuthToken, setUser } from "@/shared/lib/cookies";
 
 export function AuthForm() {
   const [typeSubmit, setTypeSubmit] = useState<"login" | "register">("login");
@@ -39,132 +39,196 @@ export function AuthForm() {
   const isLogin = typeSubmit === "login";
   const schema = isLogin ? loginSchema : registerSchema;
 
-  // Tipo correto para o formulário
   const form = useForm<LoginFormValues | RegisterFormValues>({
     resolver: zodResolver(schema),
     defaultValues: isLogin
       ? { email: "", password: "" }
-      : { email: "", password: "", confirmPassword: "" },
+      : { name: "", email: "", password: "", confirmPassword: "" },
   });
 
   useEffect(() => {
-    form.reset();
+    form.reset(
+      isLogin
+        ? { email: "", password: "" }
+        : { name: "", email: "", password: "", confirmPassword: "" }
+    );
   }, [typeSubmit, form]);
 
   const onSubmit = (data: LoginFormValues | RegisterFormValues) => {
     startTransition(async () => {
       try {
-        console.log("Dados enviados:", data);
-        await authService.authenticateUser(data.email, data.password);
-        router.push("/home");
-      } catch (err) {
+        if (isLogin) {
+          const user = await authService.authenticateUser(
+            data.email,
+            data.password
+          );
+          setAuthToken(user.token);
+          setUser(user);
+          router.push("/home");
+        } else {
+          const registerData = data as RegisterFormValues;
+          await authService.registerUser({
+            name: registerData.name,
+            email: registerData.email,
+            password: registerData.password,
+          });
+          setTypeSubmit("login");
+          form.reset({ email: registerData.email, password: "" });
+          alert("Registro realizado com sucesso! Faça login para continuar.");
+        }
+      } catch (err: unknown) {
         console.error(err);
+        alert((err as Error).message || "Erro desconhecido");
       }
     });
   };
 
   return (
-    <Card className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg w-full max-w-md">
-      <CardHeader className="text-center">
-        <CardTitle className="text-3xl text-gray-800 dark:text-white">
-          {isLogin ? "Login" : "Criar Conta"}
-        </CardTitle>
-        <CardDescription>
-          {isLogin
-            ? "Acesse sua conta para continuar."
-            : "Preencha os dados para se registrar."}
-        </CardDescription>
-      </CardHeader>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 px-4 py-8 sm:px-6">
+      <Card
+        className="
+          w-full sm:w-[90%] md:w-[420px] lg:w-[450px]
+          p-6 sm:p-8
+          rounded-2xl shadow-xl
+          bg-white dark:bg-gray-800
+          transition-all duration-300
+        "
+      >
+        <CardHeader className="text-center space-y-2 mb-4">
+          <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+            {isLogin ? "Login" : "Criar Conta"}
+          </CardTitle>
+          <CardDescription className="text-sm text-gray-600 dark:text-gray-300">
+            {isLogin
+              ? "Acesse sua conta para continuar."
+              : "Preencha os dados para se registrar."}
+          </CardDescription>
+        </CardHeader>
 
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Email */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>E-mail</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="exemplo@email.com"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+        <CardContent>
+          <Form {...form}>
+            <form
+              key={typeSubmit}
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
+              {!isLogin && (
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">
+                        Nome
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Seu nome"
+                          disabled={isPending}
+                          className="text-sm h-10"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
               )}
-            />
 
-            {/* Password */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Senha</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="Sua senha"
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Confirm Password (só registro) */}
-            {!isLogin && (
               <FormField
                 control={form.control}
-                name="confirmPassword"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirmar Senha</FormLabel>
+                    <FormLabel className="text-sm font-medium">
+                      E-mail
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="exemplo@email.com"
+                        disabled={isPending}
+                        className="text-sm h-10"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium">Senha</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="password"
-                        placeholder="Confirme sua senha"
+                        placeholder="Sua senha"
                         disabled={isPending}
+                        className="text-sm h-10"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
-            )}
 
-            {/* Botões */}
-            <div className="flex items-center justify-between pt-2">
-              <Button
-                type="button"
-                variant="link"
-                className="p-0 text-sm"
-                onClick={() => setTypeSubmit(isLogin ? "register" : "login")}
-                disabled={isPending}
-              >
-                {isLogin ? "Criar conta" : "Já tem uma conta? Fazer login"}
-              </Button>
+              {!isLogin && (
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">
+                        Confirmar Senha
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="Confirme sua senha"
+                          disabled={isPending}
+                          className="text-sm h-10"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+              )}
 
-              <Button type="submit" className="w-28" disabled={isPending}>
-                {isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : isLogin ? (
-                  "Entrar"
-                ) : (
-                  "Registrar"
-                )}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-sm text-blue-500 dark:text-blue-400 hover:underline p-0"
+                  onClick={() => setTypeSubmit(isLogin ? "register" : "login")}
+                  disabled={isPending}
+                >
+                  {isLogin ? "Criar conta" : "Já tem uma conta? Fazer login"}
+                </Button>
+
+                <Button
+                  type="submit"
+                  className="w-full sm:w-auto px-6 py-2 text-sm font-medium rounded-lg"
+                  disabled={isPending}
+                >
+                  {isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : isLogin ? (
+                    "Entrar"
+                  ) : (
+                    "Registrar"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
