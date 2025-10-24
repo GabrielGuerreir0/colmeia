@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
-  { path: "/home", whenAuthenticated: "no-redirect" },
+  { path: "/", whenAuthenticated: "no-redirect" },
 ];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED = "/login";

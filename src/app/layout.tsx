@@ -6,6 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import { UserProvider } from "@/context/UserContext";
 import { CheckoutProvider } from "@/context/CheckoutContext";
 import { PaymentProvider } from "@/context/PaymentContext";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +23,10 @@ export default function RootLayout({
           <CartProvider>
             <CheckoutProvider>
               <PaymentProvider>
-                <SidebarCartWrapper>{children}</SidebarCartWrapper>
+                <SidebarCartWrapper>
+                  {children}
+                  <Footer />
+                </SidebarCartWrapper>
               </PaymentProvider>
             </CheckoutProvider>
           </CartProvider>

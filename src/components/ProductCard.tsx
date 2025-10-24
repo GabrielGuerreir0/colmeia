@@ -60,7 +60,7 @@ export function ProductCard({ product }: ProductCardProps) {
               handleAddOneToCart();
             }}
           >
-            <ShoppingCart size={16} /> Add to Cart
+            <ShoppingCart size={16} /> Adicionar ao Carrinho
           </Button>
         </CardContent>
       </Card>

@@ -2,13 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { FaTimes } from "react-icons/fa";
 import { CartService } from "@/services/cartService";
 import { useCart } from "@/context/CartContext";
@@ -74,20 +68,22 @@ export const BuyCard: React.FC<BuyCardProps> = ({ item }) => {
               +
             </Button>
           </div>
-
-          <span className="font-semibold text-lg">
-            R$ {(item.product.price * currentItem.quantity).toFixed(2)}
-          </span>
-
-          <Button
-            size="sm"
-            variant="ghost"
-            className="text-red-500 hover:text-red-700 p-1"
-            onClick={handleRemove}
-          >
-            <FaTimes size={16} />
-          </Button>
         </CardFooter>
+      </div>
+      <div className="flex flex-col-reverse  justify-end ">
+        <span className="font-semibold text-lg">
+          R$ {(item.product.price * currentItem.quantity).toFixed(2)}
+        </span>
+      </div>
+      <div className="flex justify-end">
+        <Button
+          size="sm"
+          variant="ghost"
+          className="text-red-500 hover:text-red-700 p-1"
+          onClick={handleRemove}
+        >
+          <FaTimes size={16} />
+        </Button>
       </div>
     </Card>
   );

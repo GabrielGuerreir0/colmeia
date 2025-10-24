@@ -66,7 +66,7 @@ export function AuthForm() {
           );
           setAuthToken(userData.token);
           login(userData);
-          router.push("/home");
+          router.push("/");
         } else {
           const registerData = data as RegisterFormValues;
           await authService.registerUser({

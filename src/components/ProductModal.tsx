@@ -50,7 +50,7 @@ export function ProductModal({ product, open, onClose }: ProductModalProps) {
                 {product.name}
               </DialogTitle>
               <DialogDescription className="text-gray-600 text-sm leading-relaxed">
-                {product.description || "No description available."}
+                {product.longDescription || "No description available."}
               </DialogDescription>
             </DialogHeader>
 
@@ -95,15 +95,6 @@ export function ProductModal({ product, open, onClose }: ProductModalProps) {
                   onClick={handleAddToCart}
                 >
                   <ShoppingCart size={16} /> Adicionar
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="w-full sm:w-auto px-6 py-4 text-sm font-medium flex items-center gap-2 border border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg"
-                  onClick={handleAddToCart}
-                >
-                  <Zap size={16} /> Comprar
                 </Button>
               </div>
             </div>

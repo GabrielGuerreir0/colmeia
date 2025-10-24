@@ -37,7 +37,7 @@ export function NavBar({ onOpenCart }: NavBarProps) {
       {showActions && (
         <nav className="bg-white shadow-sm px-3 py-2 flex justify-between items-center">
           <div className="flex items-center">
-            <Link href="/home">
+            <Link href="/">
               <img
                 src="/logo.png"
                 alt="Logo"

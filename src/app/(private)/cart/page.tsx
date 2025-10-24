@@ -18,7 +18,7 @@ export default function CartPage() {
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
-  const total = subtotal + shippingCost;
+  const total = subtotal + (shippingCost ?? 0);
 
   const handleCheckout = () => router.push("/checkout");
 

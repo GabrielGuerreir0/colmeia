@@ -35,7 +35,7 @@ export interface BuyCardProps {
 export interface OrderSummaryContentProps {
   cartItems: CartItem[];
   subtotal: number;
-  shippingCost: number;
+  shippingCost: number | undefined;
   total: number;
   method?: string;
   showCheckoutButton?: boolean;

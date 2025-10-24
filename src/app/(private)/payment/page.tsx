@@ -8,27 +8,40 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  useCheckout,
-  CardInfo,
-  PaymentMethod,
-} from "@/context/CheckoutContext";
+import { useCheckout } from "@/context/CheckoutContext";
 import { useRouter } from "next/navigation";
 import { ShowOrderSummary } from "@/components/ShowOrderSummary";
 import { useCart } from "@/context/CartContext";
+import type {
+  CardInfo,
+  BoletoInfo,
+  PaymentMethod,
+} from "@/shared/types/payment";
 
-export type CardFormValues = z.infer<typeof cardSchema>;
+// 🔹 Validação com Zod
 const cardSchema = z.object({
   cardNumber: z.string().min(16, "Número do cartão deve ter 16 dígitos"),
   cardName: z.string().min(2, "Nome do titular é obrigatório"),
   expiryDate: z.string().regex(/^\d{2}\/\d{2}$/, "Formato MM/AA"),
-  cvv: z.string().min(3).max(4),
+  cvv: z.string().min(3, "Insira um CVV válido").max(3, "CVV inválido"),
 });
+
+const boletoSchema = z.object({
+  name: z.string().min(2, "Nome do comprador é obrigatório"),
+  cpf: z
+    .string()
+    .regex(/^\d{11}$/, "CPF deve conter exatamente 11 dígitos numéricos"),
+});
+
+type CardFormValues = z.infer<typeof cardSchema>;
+type BoletoFormValues = z.infer<typeof boletoSchema>;
 
 export default function PaymentPage() {
   const { data, setCheckoutData } = useCheckout();
   const { cartItems } = useCart();
   const router = useRouter();
+
+  // 🔹 Cálculo de valores
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
@@ -36,31 +49,55 @@ export default function PaymentPage() {
   const shipping = 15;
   const total = subtotal + shipping;
 
-  const [isCardValid, setIsCardValid] = useState(false);
+  const [isCardValid, setIsCardValid] = useState<boolean | null>(null);
   const [isValidating, setIsValidating] = useState(false);
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
+    register: registerCard,
+    handleSubmit: handleSubmitCard,
+    formState: { errors: cardErrors },
+    reset: resetCard,
   } = useForm<CardFormValues>({ resolver: zodResolver(cardSchema) });
 
-  const handleCardSubmit = (cardData: CardInfo) => {
+  const {
+    register: registerBoleto,
+    handleSubmit: handleSubmitBoleto,
+    formState: { errors: boletoErrors },
+    reset: resetBoleto,
+  } = useForm<BoletoFormValues>({ resolver: zodResolver(boletoSchema) });
+
+  const handleCardSubmit = (cardData: CardFormValues) => {
     setIsValidating(true);
-    setIsCardValid(false);
+    setIsCardValid(null);
 
     setTimeout(() => {
-      setCheckoutData({ paymentMethod: "card", cardInfo: cardData });
-      setIsCardValid(true);
+      const isValid = cardData.cardNumber.startsWith("4");
+      setIsCardValid(isValid);
+
+      if (isValid) {
+        setCheckoutData({
+          paymentMethod: "card",
+          cardInfo: cardData as CardInfo,
+        });
+      }
+
       setIsValidating(false);
-    }, 5000);
+    }, 2000);
+  };
+
+  const handleBoletoSubmit = (boletoData: BoletoFormValues) => {
+    setCheckoutData({
+      paymentMethod: "boleto",
+      boletoInfo: boletoData as BoletoInfo,
+    });
+    router.push("/preview");
   };
 
   const handleSelectPayment = (method: PaymentMethod) => {
     setCheckoutData({ paymentMethod: method });
-    setIsCardValid(false);
-    reset();
+    setIsCardValid(null);
+    resetCard();
+    resetBoleto();
   };
 
   const handleNext = () => {
@@ -72,6 +109,7 @@ export default function PaymentPage() {
       <h1 className="text-3xl font-bold text-gray-800">
         Escolha o Método de Pagamento
       </h1>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <RadioGroup
@@ -95,37 +133,58 @@ export default function PaymentPage() {
 
           {data.paymentMethod === "card" && (
             <form
-              onSubmit={handleSubmit(handleCardSubmit)}
+              onSubmit={handleSubmitCard(handleCardSubmit)}
               className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50"
             >
               <Input
-                {...register("cardNumber")}
+                {...registerCard("cardNumber")}
                 placeholder="Número do cartão"
+                inputMode="numeric"
+                aria-label="Número do cartão"
               />
-              {errors.cardNumber && (
+              {cardErrors.cardNumber && (
                 <p className="text-red-500 text-xs">
-                  {errors.cardNumber.message}
+                  {cardErrors.cardNumber.message}
                 </p>
               )}
-              <Input {...register("cardName")} placeholder="Nome do titular" />
-              {errors.cardName && (
+
+              <Input
+                {...registerCard("cardName")}
+                placeholder="Nome do titular"
+                aria-label="Nome do titular"
+              />
+              {cardErrors.cardName && (
                 <p className="text-red-500 text-xs">
-                  {errors.cardName.message}
+                  {cardErrors.cardName.message}
                 </p>
               )}
+
               <div className="grid grid-cols-2 gap-4">
-                <Input {...register("expiryDate")} placeholder="MM/AA" />
-                {errors.expiryDate && (
-                  <p className="text-red-500 text-xs">
-                    {errors.expiryDate.message}
-                  </p>
-                )}
-                <Input {...register("cvv")} placeholder="CVV" />
-                {errors.cvv && (
-                  <p className="text-red-500 text-xs">{errors.cvv.message}</p>
-                )}
+                <Input
+                  {...registerCard("expiryDate")}
+                  placeholder="MM/AA"
+                  aria-label="Validade"
+                />
+                <Input
+                  {...registerCard("cvv")}
+                  placeholder="CVV"
+                  inputMode="numeric"
+                  aria-label="CVV"
+                />
               </div>
-              <Button type="submit" disabled={isValidating}>
+              {cardErrors.expiryDate && (
+                <p className="text-red-500 text-xs">
+                  {cardErrors.expiryDate.message}
+                </p>
+              )}
+              {cardErrors.cvv && (
+                <p className="text-red-500 text-xs">{cardErrors.cvv.message}</p>
+              )}
+
+              <Button
+                type="submit"
+                disabled={isValidating || isCardValid === true}
+              >
                 {isValidating ? (
                   <div className="flex items-center justify-center space-x-2">
                     <span className="loader h-4 w-4 border-2 border-t-transparent border-white rounded-full animate-spin"></span>
@@ -135,18 +194,73 @@ export default function PaymentPage() {
                   "Validar Cartão"
                 )}
               </Button>
+
+              {isCardValid !== null && (
+                <p
+                  className={`mt-2 font-medium ${
+                    isCardValid ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {isCardValid ? "Cartão válido" : "Cartão inválido"}
+                </p>
+              )}
+            </form>
+          )}
+
+          {data.paymentMethod === "boleto" && (
+            <form
+              onSubmit={handleSubmitBoleto(handleBoletoSubmit)}
+              className="space-y-4 mt-4 p-4 border rounded-lg bg-gray-50"
+            >
+              <Input
+                {...registerBoleto("name")}
+                placeholder="Nome do comprador"
+                aria-label="Nome do comprador"
+              />
+              {boletoErrors.name && (
+                <p className="text-red-500 text-xs">
+                  {boletoErrors.name.message}
+                </p>
+              )}
+
+              <Input
+                {...registerBoleto("cpf")}
+                placeholder="CPF (somente números)"
+                inputMode="numeric"
+                aria-label="CPF do comprador"
+              />
+              {boletoErrors.cpf && (
+                <p className="text-red-500 text-xs">
+                  {boletoErrors.cpf.message}
+                </p>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full py-3 mt-4 bg-blue-600 text-white hover:bg-blue-700"
+              >
+                Gerar Boleto
+              </Button>
             </form>
           )}
 
           {((data.paymentMethod === "card" && isCardValid) ||
-            data.paymentMethod === "boleto" ||
             data.paymentMethod === "pix") && (
-            <Button onClick={handleNext} className="w-full py-3 mt-4">
+            <Button
+              onClick={handleNext}
+              className={`w-full py-3 mt-4 ${
+                data.paymentMethod === "card" && !isCardValid
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+              }`}
+              disabled={data.paymentMethod === "card" && !isCardValid}
+            >
               Continuar
             </Button>
           )}
         </div>
 
+        {/* 🔹 COLUNA RESUMO */}
         <div className="lg:col-span-1">
           <ShowOrderSummary
             cartItems={cartItems}

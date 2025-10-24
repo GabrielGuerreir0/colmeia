@@ -42,11 +42,11 @@ export function OrderSummaryContent({
           <span>R$ {subtotal.toFixed(2)}</span>
         </div>
 
-        {shippingCost > 0 && (
+        {(shippingCost ?? 0) > 0 && (
           <>
             <div className="flex justify-between">
               <span>Frete</span>
-              <span>R$ {shippingCost.toFixed(2)}</span>
+              <span>R$ {(shippingCost ?? 0).toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between font-bold text-lg border-t pt-3">

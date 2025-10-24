@@ -57,4 +57,9 @@ export const CartService = {
       0
     );
   },
+  clearCart() {
+    const cart = this.getCart();
+    cart.items = [];
+    cart.total = 0;
+  },
 };

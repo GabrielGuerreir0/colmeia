@@ -1,7 +1,7 @@
 "use client";
 
+import { PaymentMethod } from "@/shared/types/payment";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { PaymentMethod } from "./CheckoutContext";
 
 interface PaymentContextType {
   method: PaymentMethod;
