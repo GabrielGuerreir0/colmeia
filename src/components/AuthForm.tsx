@@ -11,6 +11,7 @@ import {
 } from "@/shared/lib/validators";
 import * as authService from "@/services/authService";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 import {
   Card,
   CardHeader,
@@ -29,12 +30,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { setAuthToken, setUser } from "@/shared/lib/cookies";
+import { setAuthToken } from "@/shared/lib/cookies";
 
 export function AuthForm() {
   const [typeSubmit, setTypeSubmit] = useState<"login" | "register">("login");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { login } = useUser();
 
   const isLogin = typeSubmit === "login";
   const schema = isLogin ? loginSchema : registerSchema;
@@ -58,12 +60,12 @@ export function AuthForm() {
     startTransition(async () => {
       try {
         if (isLogin) {
-          const user = await authService.authenticateUser(
+          const userData = await authService.authenticateUser(
             data.email,
             data.password
           );
-          setAuthToken(user.token);
-          setUser(user);
+          setAuthToken(userData.token);
+          login(userData);
           router.push("/home");
         } else {
           const registerData = data as RegisterFormValues;
@@ -85,15 +87,7 @@ export function AuthForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 px-4 py-8 sm:px-6">
-      <Card
-        className="
-          w-full sm:w-[90%] md:w-[420px] lg:w-[450px]
-          p-6 sm:p-8
-          rounded-2xl shadow-xl
-          bg-white dark:bg-gray-800
-          transition-all duration-300
-        "
-      >
+      <Card className="w-full sm:w-[90%] md:w-[420px] lg:w-[450px] p-6 sm:p-8 rounded-2xl shadow-xl bg-white dark:bg-gray-800 transition-all duration-300">
         <CardHeader className="text-center space-y-2 mb-4">
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
             {isLogin ? "Login" : "Criar Conta"}

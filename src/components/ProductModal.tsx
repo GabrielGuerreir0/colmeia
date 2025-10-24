@@ -9,27 +9,28 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import type { Product } from "@/shared/types/products";
 import { ShoppingCart, Zap } from "lucide-react";
+import { CartService } from "@/services/cartService";
+import { useCart } from "@/context/CartContext";
+import { ProductModalProps } from "@/shared/types/products";
 
-interface ProductModalProps {
-  product: Product | null;
-  open: boolean;
-  onClose: () => void;
-  onAddToCart: (product: Product) => void;
-}
-
-export function ProductModal({
-  product,
-  open,
-  onClose,
-  onAddToCart,
-}: ProductModalProps) {
+export function ProductModal({ product, open, onClose }: ProductModalProps) {
   const [quantity, setQuantity] = useState(1);
+  const { refreshCart } = useCart();
   if (!product) return null;
 
   const handleIncrease = () => setQuantity((q) => q + 1);
   const handleDecrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
+
+  const handleAddToCart = () => {
+    try {
+      CartService.addToCart(product, quantity);
+      refreshCart();
+      onClose();
+    } catch (error) {
+      alert("Você precisa estar logado para adicionar produtos ao carrinho.");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -57,7 +58,6 @@ export function ProductModal({
               <p className="text-2xl font-semibold text-gray-900">
                 R$ {product.price.toFixed(2)}
               </p>
-
               <p className="text-xs text-gray-500">
                 Disponível:{" "}
                 <span className="font-medium text-gray-800">
@@ -92,26 +92,18 @@ export function ProductModal({
                 <Button
                   size="sm"
                   className="w-full sm:w-auto px-6 py-4 text-sm font-medium flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                  onClick={() => {
-                    onAddToCart(product);
-                    onClose();
-                  }}
+                  onClick={handleAddToCart}
                 >
-                  <ShoppingCart size={16} />
-                  Adicionar
+                  <ShoppingCart size={16} /> Adicionar
                 </Button>
 
                 <Button
                   size="sm"
                   variant="outline"
                   className="w-full sm:w-auto px-6 py-4 text-sm font-medium flex items-center gap-2 border border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg"
-                  onClick={() => {
-                    onAddToCart(product);
-                    onClose();
-                  }}
+                  onClick={handleAddToCart}
                 >
-                  <Zap size={16} />
-                  Comprar
+                  <Zap size={16} /> Comprar
                 </Button>
               </div>
             </div>

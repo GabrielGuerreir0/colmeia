@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 
 const AuthForm = dynamic(
-  () => import("@/components/auth/AuthForm").then((mod) => mod.AuthForm),
+  () => import("@/components/AuthForm").then((mod) => mod.AuthForm),
   {
     ssr: false,
   }

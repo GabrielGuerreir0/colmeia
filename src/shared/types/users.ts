@@ -1,3 +1,5 @@
+import { Cart } from "./cart";
+
 export type User = {
   id: string;
   email: string;
@@ -14,4 +16,9 @@ export type AuthenticatedUser = {
   email: string;
   name: string;
   token: string;
+};
+
+export type UserCart = {
+  user: AuthenticatedUser | User;
+  cart: Cart;
 };

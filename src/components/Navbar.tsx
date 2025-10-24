@@ -14,8 +14,9 @@ import { getUser, removeAuthToken, removeUser } from "@/shared/lib/cookies";
 import { FaShoppingCart } from "react-icons/fa";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { usePathname } from "next/navigation";
+import { NavBarProps } from "@/shared/types/components";
 
-export function NavBar() {
+export function NavBar({ onOpenCart }: NavBarProps) {
   const [user, setUser] = useState<{ name: string } | null>(null);
   const pathname = usePathname();
   const showActions = pathname !== "/login";
@@ -45,18 +46,16 @@ export function NavBar() {
             </Link>
           </div>
 
-          {/* AÇÕES */}
           <div className="flex items-center gap-2 md:gap-4">
-            <Link href="/carrinho">
-              <Button
-                variant="outline"
-                size="sm"
-                aria-label="Abrir carrinho"
-                className="p-2"
-              >
-                <FaShoppingCart className="text-base" />
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              className="p-2"
+              onClick={onOpenCart}
+              aria-label="Abrir carrinho"
+            >
+              <FaShoppingCart className="text-base" />
+            </Button>
 
             {user ? (
               <DropdownMenu>

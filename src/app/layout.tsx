@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import { NavBar } from "@/components/Navbar";
+import {} from "@/components/SidebarCart";
+import { SidebarCartWrapper } from "@/components/SidebarCartWrapper";
+import { CartProvider } from "@/context/CartContext";
+import { UserProvider } from "@/context/UserContext";
+import { CheckoutProvider } from "@/context/CheckoutContext";
+import { PaymentProvider } from "@/context/PaymentContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -9,13 +14,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <NavBar />
-      <body>{children}</body>
+      <body>
+        <UserProvider>
+          <CartProvider>
+            <CheckoutProvider>
+              <PaymentProvider>
+                <SidebarCartWrapper>{children}</SidebarCartWrapper>
+              </PaymentProvider>
+            </CheckoutProvider>
+          </CartProvider>
+        </UserProvider>
+      </body>
     </html>
   );
 }

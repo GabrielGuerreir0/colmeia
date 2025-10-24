@@ -1,0 +1,74 @@
+"use client";
+
+import { AddressForm } from "@/shared/types/forms";
+import React, { createContext, useContext, useState, ReactNode } from "react";
+// import { addressForm } from "@/shared/types/addressForm";
+
+export type PaymentMethod = "card" | "boleto" | "pix" | "";
+
+export type CardInfo = {
+  cardNumber: string;
+  cardName: string;
+  expiryDate: string;
+  cvv: string;
+};
+
+export type OrderStatus =
+  | "inicial"
+  | "processando"
+  | "pago"
+  | "falhado"
+  | "expirado";
+
+interface CheckoutData {
+  addressData: AddressForm | null;
+  shippingCost: number;
+  paymentMethod: PaymentMethod;
+  cardInfo?: CardInfo;
+  orderStatus?: OrderStatus;
+}
+
+interface CheckoutContextType {
+  data: CheckoutData;
+  setCheckoutData: (newData: Partial<CheckoutData>) => void;
+  resetCheckout: () => void;
+}
+
+const CheckoutContext = createContext<CheckoutContextType | undefined>(
+  undefined
+);
+
+export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
+  const [data, setData] = useState<CheckoutData>({
+    addressData: null,
+    shippingCost: 0,
+    paymentMethod: "",
+    orderStatus: "inicial",
+  });
+
+  const setCheckoutData = (newData: Partial<CheckoutData>) => {
+    setData((prev) => ({ ...prev, ...newData }));
+  };
+
+  const resetCheckout = () => {
+    setData({
+      addressData: null,
+      shippingCost: 0,
+      paymentMethod: "",
+      orderStatus: "inicial",
+    });
+  };
+
+  return (
+    <CheckoutContext.Provider value={{ data, setCheckoutData, resetCheckout }}>
+      {children}
+    </CheckoutContext.Provider>
+  );
+};
+
+export const useCheckout = () => {
+  const context = useContext(CheckoutContext);
+  if (!context)
+    throw new Error("useCheckout must be used within a CheckoutProvider");
+  return context;
+};

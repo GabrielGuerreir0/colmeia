@@ -10,3 +10,44 @@ export type Cart = {
   items: CartItem[];
   total: number;
 };
+
+export interface ShowOrderSummaryProps {
+  cartItems: CartItem[];
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+  method?: string;
+}
+
+export interface SidebarCartProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export interface CartCardProps {
+  item: CartItem;
+}
+
+export interface BuyCardProps {
+  item: CartItem;
+}
+
+export interface OrderSummaryContentProps {
+  cartItems: CartItem[];
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+  method?: string;
+  showCheckoutButton?: boolean;
+  onCheckout: () => void;
+}
+
+export interface OrderSummaryProps {
+  cartItems: CartItem[];
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+  method?: string;
+  showCheckoutButton?: boolean;
+  onCheckout: () => void;
+}

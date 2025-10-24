@@ -1,16 +1,22 @@
-import { User } from "../types/users";
+import { User } from "@/shared/types/users";
 
 export const mockUsers: User[] = [
   {
-    id: crypto.randomUUID(),
-    email: "user@teste.com",
+    id: "u1",
+    name: "Gabriel Guerrero",
+    email: "gabriel@example.com",
     password: "123456",
-    name: "Gabriel",
   },
   {
-    id: crypto.randomUUID(),
-    email: "Colmeia@colmeia.com",
-    password: "colmeia",
-    name: "Colmeia",
+    id: "u2",
+    name: "Lucas Melo",
+    email: "lucas@example.com",
+    password: "123456",
+  },
+  {
+    id: "u3",
+    name: "Maria Silva",
+    email: "maria@example.com",
+    password: "123456",
   },
 ];

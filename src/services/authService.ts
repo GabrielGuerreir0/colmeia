@@ -1,4 +1,6 @@
+import { mockUserCarts } from "@/shared/mock/userCart";
 import { mockUsers } from "@/shared/mock/users";
+import { Cart } from "@/shared/types/cart";
 import type {
   AuthenticatedUser,
   RegisterUser,
@@ -19,8 +21,18 @@ export async function registerUser(
     password: userData.password,
     name: userData.name,
   };
-
   mockUsers.push(newUser);
+
+  const newCart: Cart = {
+    id: `cart_${newUser.id}`,
+    items: [],
+    total: 0,
+  };
+  mockUserCarts.push({
+    user: newUser,
+    cart: newCart,
+  });
+
   const token = "TokenSimulado";
 
   return {

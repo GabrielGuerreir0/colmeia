@@ -4,39 +4,36 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductModal } from "@/components/ProductModal";
-import type { Product } from "@/shared/types/products";
+import { CartService } from "@/services/cartService";
+import { useCart } from "@/context/CartContext";
+import { ShoppingCart } from "lucide-react";
+import { ProductCardProps } from "@/shared/types/products";
 
-interface ProductCardProps {
-  product: Product;
-  onAddToCart: (product: Product) => void;
-}
-
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { refreshCart } = useCart();
 
-  const handleDoubleClick = () => setIsModalOpen(true);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setIsModalOpen(true);
+  const handleAddOneToCart = () => {
+    try {
+      CartService.addToCart(product, 1);
+      refreshCart();
+    } catch {
+      alert("Você precisa estar logado para adicionar produtos ao carrinho.");
     }
-  };
-
-  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    onAddToCart(product);
   };
 
   return (
     <>
       <Card
         tabIndex={0}
-        onDoubleClick={handleDoubleClick}
-        onKeyDown={handleKeyDown}
-        className="cursor-pointer hover:shadow-md transition-all duration-200 
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 
-        pt-0 max-w-[250px] w-full rounded-xl overflow-hidden"
+        onDoubleClick={() => setIsModalOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsModalOpen(true);
+          }
+        }}
+        className="cursor-pointer hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 pt-0 max-w-[250px] w-full rounded-xl overflow-hidden"
       >
         <img
           src={product.image}
@@ -58,9 +55,12 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           <Button
             size="sm"
             className="w-full text-sm py-1.5"
-            onClick={handleAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddOneToCart();
+            }}
           >
-            Add to Cart
+            <ShoppingCart size={16} /> Add to Cart
           </Button>
         </CardContent>
       </Card>
@@ -69,7 +69,6 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         product={product}
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onAddToCart={onAddToCart}
       />
     </>
   );

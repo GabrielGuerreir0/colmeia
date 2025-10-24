@@ -6,3 +6,17 @@ export type Product = {
   amount: number;
   image: string;
 };
+
+export interface ProductModalProps {
+  product: Product | null;
+  open: boolean;
+  onClose: () => void;
+}
+
+export interface ProductCardProps {
+  product: Product;
+}
+
+export interface AddToCartChildProps {
+  onAddToCart: (product: Product, quantity?: number) => void;
+}
