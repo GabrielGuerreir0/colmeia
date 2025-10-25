@@ -43,13 +43,10 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({
         }`}
       >
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-xl font-semibold flex items-center gap-2">
+          <h2 className="text-xl font-semibold flex items-center gap-2 text-[#11286b]">
             <FaShoppingCart /> Seu Carrinho
           </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-600 hover:text-gray-800"
-          >
+          <button onClick={onClose} className="text-[#11286b] ">
             <FaTimes size={20} />
           </button>
         </div>
@@ -72,13 +69,13 @@ export const SidebarCart: React.FC<SidebarCartProps> = ({
 
         {cartItems.length > 0 && (
           <Card className="p-4 border-t flex flex-col gap-3">
-            <div className="flex justify-between font-semibold text-lg">
+            <div className="flex justify-between font-semibold text-lg text-[#11286b]">
               <span>Total:</span>
               <span>R$ {total.toFixed(2)}</span>
             </div>
             <Button
               variant="default"
-              className="w-full py-3"
+              className="w-full py-3 bg-[#11286b] hover:text-[#11286b] hover:bg-[#ffbd00] cursor-pointer"
               onClick={handleGoToCart}
             >
               Finalizar Compra

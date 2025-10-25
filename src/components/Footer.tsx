@@ -16,7 +16,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer
-      className="w-full bg-gray-900 text-white text-center py-4 select-none"
+      className="w-full bg-[#11286b] text-white text-center py-4 select-none"
       onCopy={handleCopy}
     >
       <div>

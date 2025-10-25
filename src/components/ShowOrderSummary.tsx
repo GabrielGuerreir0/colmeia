@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShowOrderSummaryProps } from "@/shared/types/cart";
+import { usePathname } from "next/navigation";
 
 export function ShowOrderSummary({
   cartItems,
@@ -10,22 +11,24 @@ export function ShowOrderSummary({
   total,
   method,
 }: ShowOrderSummaryProps) {
+  const pathname = usePathname();
+  const cardClassName = pathname === "/preview" ? "w-full" : "w-md";
   return (
-    <Card className="w-full">
+    <Card className={cardClassName}>
       <CardHeader>
-        <CardTitle>Resumo do Pedido</CardTitle>
+        <CardTitle className="text-[#11286b]">Resumo do Pedido</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 ">
         {cartItems.map((item) => (
           <div key={item.product.id} className="flex justify-between">
-            <span>
+            <span className="text-[#11286b]">
               {item.product.name} x {item.quantity}
             </span>
             <span>R$ {(item.product.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
 
-        <div className="flex justify-between border-t pt-2 font-medium">
+        <div className="flex justify-between border-t pt-2 font-medium text-[#11286b]">
           <span>Subtotal</span>
           <span>R$ {subtotal.toFixed(2)}</span>
         </div>
@@ -37,7 +40,7 @@ export function ShowOrderSummary({
               <span>R$ {shippingCost.toFixed(2)}</span>
             </div>
 
-            <div className="flex justify-between font-bold text-lg border-t pt-3">
+            <div className="flex justify-between font-bold text-lg border-t pt-3 text-[#11286b]">
               <span>Total</span>
               <span>R$ {total.toFixed(2)}</span>
             </div>

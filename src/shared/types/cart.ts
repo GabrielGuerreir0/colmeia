@@ -11,6 +11,16 @@ export type Cart = {
   total: number;
 };
 
+export interface CartContextProps {
+  cartItems: CartItem[];
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
+  addToCart: (product: Product, quantity?: number) => void;
+  refreshCart: () => void;
+  lastUpdated: number;
+}
+
 export interface ShowOrderSummaryProps {
   cartItems: CartItem[];
   subtotal: number;

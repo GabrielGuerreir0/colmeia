@@ -1,13 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { AddressForm } from "@/shared/types/forms";
-import {
-  BoletoInfo,
-  CardInfo,
-  CheckoutData,
-  PaymentMethod,
-} from "@/shared/types/payment";
+import { CheckoutData } from "@/shared/types/payment";
 
 interface CheckoutContextType {
   data: CheckoutData;

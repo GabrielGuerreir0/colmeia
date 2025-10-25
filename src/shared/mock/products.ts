@@ -43,16 +43,6 @@ export const mockProducts: Product[] = [
   },
   {
     id: "5",
-    name: "Relógio Esportivo",
-    description: "Relógio com monitor de frequência cardíaca e GPS.",
-    longDescription:
-      "Relógio esportivo multifuncional com monitor de frequência cardíaca, GPS integrado e rastreamento de atividades. Ideal para corredores, ciclistas e atletas de todas as modalidades. Possui alertas de treino, contagem de calorias e histórico de atividades sincronizável com aplicativos móveis. Resistente à água, é adequado para natação e exercícios ao ar livre em qualquer clima, garantindo durabilidade e precisão.",
-    price: 499.99,
-    amount: 20,
-    image: "/relogio.jpg",
-  },
-  {
-    id: "6",
     name: "Fone de Ouvido Bluetooth",
     description: "Fones sem fio com cancelamento de ruído.",
     longDescription:
@@ -62,7 +52,7 @@ export const mockProducts: Product[] = [
     image: "/fone.jpg",
   },
   {
-    id: "7",
+    id: "6",
     name: "Tapete de Yoga",
     description: "Tapete antiderrapante para yoga e pilates.",
     longDescription:
@@ -72,7 +62,7 @@ export const mockProducts: Product[] = [
     image: "/tapete.jpg",
   },
   {
-    id: "8",
+    id: "7",
     name: "Bolsa Térmica",
     description: "Bolsa térmica para transportar alimentos e bebidas.",
     longDescription:
@@ -82,17 +72,17 @@ export const mockProducts: Product[] = [
     image: "/bolsaTermica.jpg",
   },
   {
-    id: "9",
+    id: "8",
     name: "Suplemento Proteico",
     description: "Proteína em pó para ganho de massa muscular.",
     longDescription:
       "Suplemento proteico de alta qualidade, ideal para ganho de massa muscular e recuperação pós-treino. Contém aminoácidos essenciais e fácil digestão. Formulado para atletas e praticantes de atividades físicas, auxilia no desenvolvimento muscular, na reparação tecidual e no aumento da energia. Pode ser misturado com água, leite ou shakes, oferecendo sabor agradável e praticidade.",
     price: 129.9,
     amount: 150,
-    image: "/suplemento.jpg",
+    image: "./suplemento.jpg",
   },
   {
-    id: "10",
+    id: "9",
     name: "Corda de Pular",
     description: "Corda ajustável para treino cardiovascular.",
     longDescription:
@@ -102,17 +92,7 @@ export const mockProducts: Product[] = [
     image: "/corda.jpg",
   },
   {
-    id: "11",
-    name: "Luvas de Treino",
-    description: "Luvas acolchoadas para musculação e crossfit.",
-    longDescription:
-      "Luvas de treino confortáveis e resistentes, com acolchoamento nas palmas para proteção durante exercícios de musculação e crossfit. Ajuste seguro com velcro garante firmeza e estabilidade. Fabricadas com materiais respiráveis, evitam suor excessivo, bolhas e desconforto. Perfeitas para levantamento de pesos, barras e exercícios funcionais, aumentando segurança e desempenho.",
-    price: 79.9,
-    amount: 70,
-    image: "/luvas.jpg",
-  },
-  {
-    id: "12",
+    id: "10",
     name: "Óculos de Natação",
     description: "Óculos com proteção UV e vedação confortável.",
     longDescription:
@@ -122,7 +102,7 @@ export const mockProducts: Product[] = [
     image: "/oculosNatacao.jpg",
   },
   {
-    id: "13",
+    id: "11",
     name: "Bola de Exercício",
     description: "Bola de estabilidade para pilates e alongamentos.",
     longDescription:
@@ -132,7 +112,7 @@ export const mockProducts: Product[] = [
     image: "/bola.jpg",
   },
   {
-    id: "14",
+    id: "12",
     name: "Meias Esportivas",
     description: "Meias com amortecimento para corrida e treino.",
     longDescription:
@@ -140,15 +120,5 @@ export const mockProducts: Product[] = [
     price: 29.9,
     amount: 200,
     image: "/meia.jpg",
-  },
-  {
-    id: "15",
-    name: "Toalha Esportiva",
-    description: "Toalha leve e absorvente para uso em treinos e academia.",
-    longDescription:
-      "Toalha esportiva feita com tecido altamente absorvente, leve e de secagem rápida. Ideal para academias, treinos ao ar livre ou atividades físicas em geral. Seu tamanho compacto permite fácil transporte em bolsas ou mochilas, enquanto o material macio protege a pele e oferece conforto durante o uso. Resistente a lavagens frequentes, mantém a maciez e eficiência por muito tempo, sendo perfeita para manter higiene e frescor durante os exercícios.",
-    price: 49.9,
-    amount: 120,
-    image: "/toalhaEsportiva.jpg",
   },
 ];

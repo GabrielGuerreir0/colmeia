@@ -15,11 +15,17 @@ import { FaShoppingCart } from "react-icons/fa";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { usePathname } from "next/navigation";
 import { NavBarProps } from "@/shared/types/components";
+import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 export function NavBar({ onOpenCart }: NavBarProps) {
   const [user, setUser] = useState<{ name: string } | null>(null);
   const pathname = usePathname();
   const showActions = pathname !== "/login";
+  const router = useRouter();
+
+  const { cartItems } = useCart();
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     setUser(getUser());
@@ -29,13 +35,13 @@ export function NavBar({ onOpenCart }: NavBarProps) {
     removeAuthToken();
     removeUser();
     setUser(null);
-    window.location.href = "/login";
+    router.push("/login");
   };
 
   return (
     <>
       {showActions && (
-        <nav className="bg-white shadow-sm px-3 py-2 flex justify-between items-center">
+        <nav className="bg-white shadow-sm px-3 py-2 flex justify-between items-center text-[#11286b]">
           <div className="flex items-center">
             <Link href="/">
               <img
@@ -46,15 +52,20 @@ export function NavBar({ onOpenCart }: NavBarProps) {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-4 relative ">
             <Button
               variant="outline"
               size="sm"
-              className="p-2"
+              className="p-2 hover:text-[#ffbd00] cursor-pointer relative"
               onClick={onOpenCart}
               aria-label="Abrir carrinho"
             >
               <FaShoppingCart className="text-base" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Button>
 
             {user ? (
@@ -79,14 +90,17 @@ export function NavBar({ onOpenCart }: NavBarProps) {
                       />
                       <AvatarFallback>U</AvatarFallback>
                     </Avatar>
-                    <Label className="ml-2 text-gray-700 text-sm hidden md:inline">
+                    <Label className="ml-2 text-sm hidden md:inline">
                       {user.name.split(" ")[0]}
                     </Label>
                   </div>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuContent align="end" className="text-[#11286b] ">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="hover:text-[#ffbd00] "
+                  >
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -96,7 +110,7 @@ export function NavBar({ onOpenCart }: NavBarProps) {
                 <Button
                   variant="default"
                   size="sm"
-                  className="px-3 py-1 text-sm"
+                  className="px-3 py-1 text-sm bg-[#11286b] hover:bg-[#ffbd00] hover:text-[#11286b] cursor-pointer"
                 >
                   Login
                 </Button>

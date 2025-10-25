@@ -22,7 +22,7 @@ export function OrderSummaryContent({
   return (
     <Card className="p-4 space-y-4">
       <CardHeader className="p-0">
-        <CardTitle className="text-xl font-semibold text-gray-800 mb-2">
+        <CardTitle className="text-xl font-semibold  mb-2 text-[#11286b]">
           Resumo do Pedido
         </CardTitle>
       </CardHeader>
@@ -30,14 +30,14 @@ export function OrderSummaryContent({
       <CardContent className="p-0 space-y-2 text-gray-700">
         {cartItems.map((item) => (
           <div key={item.product.id} className="flex justify-between">
-            <span>
+            <span className="text-[#11286b]">
               {item.product.name} x {item.quantity}
             </span>
             <span>R$ {(item.product.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
 
-        <div className="flex justify-between border-t pt-2 font-medium">
+        <div className="flex justify-between border-t pt-2 font-medium text-[#11286b]">
           <span>Subtotal</span>
           <span>R$ {subtotal.toFixed(2)}</span>
         </div>
@@ -66,7 +66,7 @@ export function OrderSummaryContent({
       {showCheckoutButton && (
         <CardFooter className="p-0">
           <Button
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200"
+            className="w-full py-3  text-white rounded-xl transition-all duration-200 bg-[#11286b] hover:bg-[#ffbd00] hover:text-[#11286b] cursor-pointer"
             onClick={onCheckout}
           >
             Pagar Agora

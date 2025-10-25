@@ -26,29 +26,34 @@ export default function PreviewPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold text-gray-800">Resumo do Pedido</h1>
+      <h1 className="text-3xl font-bold text-[#11286b]">Resumo do Pedido</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle>Endereço de Entrega</CardTitle>
+          <CardTitle className="text-[#11286b]">Endereço de Entrega</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {data.addressData ? (
             <>
               <p>
-                <strong>Nome:</strong> {data.addressData.name}
+                <strong className="text-[#11286b]">Nome:</strong>{" "}
+                {data.addressData.name}
               </p>
               <p>
-                <strong>Email:</strong> {data.addressData.email}
+                <strong className="text-[#11286b]">Email:</strong>{" "}
+                {data.addressData.email}
               </p>
               <p>
-                <strong>Endereço:</strong> {data.addressData.address}
+                <strong className="text-[#11286b]">Endereço:</strong>{" "}
+                {data.addressData.address}
               </p>
               <p>
-                <strong>Cidade:</strong> {data.addressData.city}
+                <strong className="text-[#11286b]">Cidade:</strong>{" "}
+                {data.addressData.city}
               </p>
               <p>
-                <strong>CEP:</strong> {data.addressData.cep}
+                <strong className="text-[#11286b]">CEP:</strong>{" "}
+                {data.addressData.cep}
               </p>
             </>
           ) : (
@@ -59,26 +64,29 @@ export default function PreviewPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Pagamento</CardTitle>
+          <CardTitle className="text-[#11286b]">Pagamento</CardTitle>
         </CardHeader>
         <CardContent>
           {data.paymentMethod ? (
             <>
               <p>
-                <strong>Método:</strong> {data.paymentMethod.toUpperCase()}
+                <strong className="text-[#11286b]">Método:</strong>{" "}
+                {data.paymentMethod.toUpperCase()}
               </p>
 
               {data.paymentMethod === "card" && data.cardInfo && (
                 <>
                   <p>
-                    <strong>Número:</strong> **** **** ****{" "}
-                    {data.cardInfo.cardNumber.slice(-4)}
+                    <strong className="text-[#11286b]">Número:</strong> ****
+                    **** **** {data.cardInfo.cardNumber.slice(-4)}
                   </p>
                   <p>
-                    <strong>Titular:</strong> {data.cardInfo.cardName}
+                    <strong className="text-[#11286b]">Titular:</strong>{" "}
+                    {data.cardInfo.cardName}
                   </p>
                   <p>
-                    <strong>Validade:</strong> {data.cardInfo.expiryDate}
+                    <strong className="text-[#11286b]">Validade:</strong>{" "}
+                    {data.cardInfo.expiryDate}
                   </p>
                 </>
               )}
@@ -101,7 +109,8 @@ export default function PreviewPage() {
               {data.paymentMethod === "pix" && (
                 <>
                   <p>
-                    <strong>Chave PIX:</strong> mock@checkout.com
+                    <strong className="text-[#11286b]">Chave PIX:</strong>{" "}
+                    mock@checkout.com
                   </p>
                   <p className="text-sm text-gray-600 mt-2">
                     Escaneie o QR Code que será exibido para concluir o
@@ -124,7 +133,7 @@ export default function PreviewPage() {
       />
 
       <Button
-        className="w-full py-3 mt-4 bg-green-600 hover:bg-green-700"
+        className="w-full py-3 mt-4 bg-[#11286b] hover:text-[#11286b] hover:bg-[#ffbd00] cursor-pointer"
         onClick={handleConfirmOrder}
       >
         Confirmar Pedido

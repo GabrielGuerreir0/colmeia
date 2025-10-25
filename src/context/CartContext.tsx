@@ -6,15 +6,12 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
-import { CartItem } from "@/shared/types/cart";
+import { CartContextProps, CartItem } from "@/shared/types/cart";
 import { CartService } from "@/services/cartService";
 import { useUser } from "@/context/UserContext";
-
-interface CartContextProps {
-  cartItems: CartItem[];
-  refreshCart: () => void;
-}
+import { Product } from "@/shared/types/products";
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
@@ -27,24 +24,44 @@ export const useCart = () => {
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useUser();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<number>(Date.now());
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (user) {
-      const cart = CartService.getCart();
-      setCartItems(cart.items || []);
-    } else {
-      setCartItems([]);
-    }
-  }, [user]);
-
-  const refreshCart = () => {
+  const refreshCart = useCallback(() => {
     if (!user) return;
     const cart = CartService.getCart();
     setCartItems(cart.items || []);
+    setLastUpdated(Date.now());
+  }, [user]);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+
+  const addToCart = (product: Product, quantity: number = 1) => {
+    if (!user) throw new Error("Usuário não está logado");
+
+    CartService.addToCart(product, quantity);
+    refreshCart();
+    openCart();
   };
 
+  useEffect(() => {
+    if (user) refreshCart();
+    else setCartItems([]);
+  }, [user, refreshCart]);
+
   return (
-    <CartContext.Provider value={{ cartItems, refreshCart }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        refreshCart,
+        lastUpdated,
+        isCartOpen,
+        openCart,
+        closeCart,
+        addToCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

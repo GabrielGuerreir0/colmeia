@@ -7,15 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle, XCircle, Clock } from "lucide-react";
 import { OrderStatus } from "@/shared/types/payment";
 import { CartService } from "@/services/cartService";
+import { useCart } from "@/context/CartContext";
 
 export default function StatusPaymentPage() {
   const { data, resetCheckout } = useCheckout();
+  const { refreshCart } = useCart();
   const router = useRouter();
 
   const [status, setStatus] = useState<OrderStatus>("inicial");
   const [showPixQR, setShowPixQR] = useState(false);
-  const [qrKey, setQrKey] = useState(Date.now());
+  const [qrKey, setQrKey] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const escolherResultado = (): OrderStatus => {
+    const rand = Math.random();
+    if (rand < 0.75) return "pago";
+    if (rand < 0.9) return "falhado";
+    return "expirado";
+  };
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -33,17 +42,20 @@ export default function StatusPaymentPage() {
     };
   }, [data.paymentMethod]);
 
+  useEffect(() => {
+    if (status === "pago") {
+      CartService.clearCart();
+      refreshCart();
+    }
+  }, [status, refreshCart]);
+
   const gerarPixQR = () => {
     setShowPixQR(true);
     setQrKey(Date.now());
 
     timerRef.current = setTimeout(() => {
       setShowPixQR(false);
-      if (status === "falhado") {
-        gerarPixQR();
-      } else {
-        iniciarProcessamento();
-      }
+      iniciarProcessamento();
     }, 8000);
   };
 
@@ -62,10 +74,8 @@ export default function StatusPaymentPage() {
     setStatus("processando");
 
     timerRef.current = setTimeout(() => {
-      const random = Math.random();
-      if (random < 0.7) setStatus("pago");
-      else if (random < 0.9) setStatus("falhado");
-      else setStatus("expirado");
+      const resultado = escolherResultado();
+      setStatus(resultado);
     }, 3000);
   };
 
@@ -77,7 +87,6 @@ export default function StatusPaymentPage() {
 
   const handleFinish = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    CartService.clearCart();
     resetCheckout();
     router.push("/");
   };
@@ -87,7 +96,7 @@ export default function StatusPaymentPage() {
       {showPixQR && (
         <>
           <img
-            key={qrKey}
+            key={qrKey ?? 0}
             src="/qr.png"
             alt="QR Code Pix"
             className="w-48 h-48"
@@ -128,7 +137,7 @@ export default function StatusPaymentPage() {
             {status === "processando" && (
               <>
                 <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-2xl font-semibold text-gray-800 text-[#11286b]">
                   Processando pagamento...
                 </h2>
                 <p className="text-gray-500">
@@ -148,7 +157,7 @@ export default function StatusPaymentPage() {
                 </p>
                 <Button
                   onClick={handleFinish}
-                  className="mt-4 bg-green-600 hover:bg-green-700"
+                  className="mt-4 bg-green-600 hover:bg-green-700 cursor-pointer"
                 >
                   Voltar para o Catalogo
                 </Button>
@@ -166,7 +175,7 @@ export default function StatusPaymentPage() {
                 </p>
                 <Button
                   onClick={handleTryAgain}
-                  className="mt-4 bg-blue-600 hover:bg-blue-700"
+                  className="mt-4 hover:text-[#11286b] hover:bg-[#ffbd00] bg-[#11286b] text-[#ffbd00] cursor-pointer"
                 >
                   repetir o pedido
                 </Button>
@@ -184,7 +193,7 @@ export default function StatusPaymentPage() {
                 </p>
                 <Button
                   onClick={handleTryAgain}
-                  className="mt-4 bg-blue-600 hover:bg-blue-700"
+                  className="mt-4 hover:text-[#11286b] hover:bg-[#ffbd00] bg-[#11286b] text-[#ffbd00] cursor-pointer"
                 >
                   repetir o pedido
                 </Button>

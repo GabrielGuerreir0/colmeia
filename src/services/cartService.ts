@@ -1,7 +1,7 @@
 import { Cart } from "@/shared/types/cart";
 import { mockUserCarts } from "@/shared/mock/userCart";
 import { Product } from "@/shared/types/products";
-import { getUser } from "@/shared/lib/cookies"; // seu utilitário de cookie
+import { getUser } from "@/shared/lib/cookies";
 
 export const CartService = {
   getCart(): Cart {

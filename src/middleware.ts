@@ -4,6 +4,19 @@ import type { NextRequest } from "next/server";
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
   { path: "/", whenAuthenticated: "no-redirect" },
+  { path: "/logo.png", whenAuthenticated: "no-redirect" },
+  { path: "/tenis.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/camiseta.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/garrafa.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/mochila.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/fone.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/tapete.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/bolsaTermica.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/suplemento.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/corda.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/oculosNatacao.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/bola.jpg", whenAuthenticated: "no-redirect" },
+  { path: "/meia.jpg", whenAuthenticated: "no-redirect" },
 ];
 
 const REDIRECT_WHEN_NOT_AUTHENTICATED = "/login";

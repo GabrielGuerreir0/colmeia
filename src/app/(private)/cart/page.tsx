@@ -32,7 +32,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto p-6 lg:p-10">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Carrinho</h1>
+      <h1 className="text-3xl font-bold mb-8  text-[#11286b]">Carrinho</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 flex flex-col gap-4 max-h-[75vh] overflow-y-auto pr-2">
