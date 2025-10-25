@@ -1,8 +1,9 @@
-# Checkout
+# Frontend Challenge — Checkout Flow (100% Mocked)
 
-This web application simulates a **complete checkout flow**, including user authentication, product selection, and payment, using only mocked data (no real backend). The goal is to create a smooth and consistent user experience with proper state handling, feedback, and simulated payment processes.
+This web application simulates a **complete checkout flow** with fully mocked data (no real backend).  
+The goal is to implement a smooth and predictable user experience, including authentication, product selection, and payment, with proper state handling, feedback, and simulated payment processes.
 
-Stack used:
+## Stack Used
 
 - **ReactJS**
 - **Next.js**
@@ -12,18 +13,48 @@ Stack used:
 
 ---
 
-## Features
+## Minimum Scope
 
-### 1. Authentication (mocked)
+### 1) Authentication (mocked)
 
 - Single page for login or account creation.
 - Simulated session persistence in the browser (localStorage or cookies).
 - Checkout access blocked for unauthenticated users.
 - Simple field validation with error messages.
 
-## User Flow
+### 2) Product Selection
+
+- Simple product list with prices.
+- Add to cart and order summary.
+- Quantity updates and removal from cart.
+
+### 3) Payment
+
+- Choice of payment method: Pix, Credit Card, or Boleto.
+- Fields specific to each payment method (proper UI per method).
+- Order confirmation and simulated processing.
+- Status evolution: initial → processing → paid | failed | expired (rules simulated).
+- **Card validation rule:** Only cards starting with common valid prefixes (3, 4, 5, 6) are accepted.
+
+### 4) States and Feedback
+
+- Loading, empty, error, success states.
+- Clear and actionable messages.
+- Basic responsiveness and accessibility (focus, labels, keyboard navigation).
+
+---
+
+## Expected User Flow
 
 1. **Login / Signup**
+2. **Product Catalog**
+3. **Cart**
+4. **Checkout**
+   - Buyer information (pre-filled from logged-in user)
+   - Payment method (Pix / Card / Boleto)
+   - Review and confirm order
+   - Track order status until completion
+   - Result screen (paid / failed / expired) with option to retry if applicable
 
 ---
 
@@ -33,29 +64,23 @@ Stack used:
 
 /src
  ├─ /app
- │   ├─ /(private)        # Private routes, accessible only by authenticated users
- │   │   └─ /home         # Home page for logged-in users
+ │   ├─ /(private)        # Private routes, accessible only to authenticated users
  │   ├─ /(public)         # Public routes, accessible without authentication
- │   │   └─ /login        # Login and signup page
- │   └─ layout.tsx        # Main app layout, wrapping pages with header/footer/etc.
+ │   └─ layout.tsx        # Main app layout, wraps pages with header/footer/etc.
  ├─ /components
- │   ├─ /ui               # Reusable UI components (buttons, inputs, modals)
- │   └─ /auth             # Authentication-related components (login forms, signup forms)
- ├─ /context              # React contexts for global state (auth, cart, etc.)
+ │   └─ /ui               # Reusable UI components (buttons, inputs, modals)
+ ├─ /context              # React contexts for global state management (auth, cart, etc.)
  ├─ /hooks                # Custom React hooks for reusable logic
+ ├─ /services             # API calls and service logic
+ ├─ /shared               # Shared utilities and types used across the app
+ │   ├─ lib               # Utility functions (e.g., cookie handling)
+ │   ├─ mock              # Mock data for testing or development
+ │   └─ types             # TypeScript type definitions and interfaces
  ├─ /lib
- │   ├─ cookies.ts        # Functions for handling cookies
- │   ├─ js-cookie.d.ts    # Type definitions for js-cookie library
- │   ├─ utils.ts          # Generic utility functions used across the app
- │   └─ validators.ts     # Input validation schemas (e.g., with Zod)
- ├─ /mock
- │   └─ users.ts          # Mocked user data for testing authentication
- ├─ /service
- │   └─ authService.ts    # Mocked authentication service (login/signup logic)
- ├─ /styles
- │   └─ global.css        # Global CSS styles (Tailwind overrides, base styles)
- ├─ /types
- │   └─ user.ts           # TypeScript types/interfaces for user-related data
+ │   ├─ js-cookie.d.ts    # Type definitions for the js-cookie library
+ │   ├─ utils.ts          # Generic utility functions
+ │   └─ validators.ts     # Input validation schemas (e.g., using Zod)
+ ├─ /styles               # Global styles and CSS/SCSS files
  └─ middleware.ts         # Next.js middleware for route protection and auth checks
 
 ```
@@ -84,16 +109,12 @@ git clone https://github.com/GabrielGuerreir0/colmeia.git
 
 ```bash
 npm install
-# or
-yarn install
 ```
 
 3. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 4. Open the app at: http://localhost:3000
@@ -101,3 +122,5 @@ yarn dev
 ## Notes
 
 - The application is **fully mocked**, with no real backend involved.
+- Payment processing and status transitions are simulated for realistic UX.
+- **Card validation:** Only credit cards starting with common valid prefixes (3, 4, 5, 6) are considered valid.

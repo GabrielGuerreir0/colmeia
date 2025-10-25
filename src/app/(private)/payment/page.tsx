@@ -73,7 +73,9 @@ export default function PaymentPage() {
     setIsCardValid(null);
 
     setTimeout(() => {
-      const isValid = cardData.cardNumber.startsWith("4");
+      const isValid = ["3", "4", "5", "6"].some((digit) =>
+        cardData.cardNumber.startsWith(digit)
+      );
       setIsCardValid(isValid);
 
       if (isValid) {
