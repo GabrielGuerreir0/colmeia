@@ -13,6 +13,22 @@ The goal is to implement a smooth and predictable user experience, including aut
 
 ---
 
+## Environment & Versions
+
+To ensure full compatibility, use the following versions (or higher compatible ones):
+
+| Tool / Library   | Version         |
+| ---------------- | --------------- |
+| **Node.js**      | `18.18.0` (LTS) |
+| **npm**          | `>=9.0.0`       |
+| **Next.js**      | `15.5.6`        |
+| **React**        | `19.1.0`        |
+| **TypeScript**   | `5.x`           |
+| **Tailwind CSS** | `4.x`           |
+| **ESLint**       | `9.x`           |
+
+---
+
 ## Minimum Scope
 
 ### 1) Authentication (mocked)
