@@ -106,6 +106,8 @@ export default function PaymentPage() {
 
   const handleNext = () => router.push("/preview");
 
+  const paymentMethods: PaymentMethod[] = ["card", "boleto", "pix"];
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
       <h1 className="text-3xl font-bold text-[#11286b]">
@@ -119,13 +121,37 @@ export default function PaymentPage() {
             onValueChange={handleSelectPayment}
             className="space-y-2"
           >
-            {["card", "boleto", "pix"].map((method) => (
+            {paymentMethods.map((method, index) => (
               <div
                 key={method}
                 className="flex items-center space-x-2 text-[#11286b]"
               >
-                <RadioGroupItem value={method} id={method} />
-                <Label htmlFor={method}>
+                <RadioGroupItem
+                  value={method}
+                  id={method}
+                  tabIndex={0}
+                  className="focus-visible:ring-2 focus-visible:ring-[#ffbd00] focus-visible:outline-none"
+                  onKeyDown={(e) => {
+                    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+                      e.preventDefault();
+                      const nextIndex = (index + 1) % paymentMethods.length;
+                      handleSelectPayment(paymentMethods[nextIndex]);
+                    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+                      e.preventDefault();
+                      const prevIndex =
+                        (index - 1 + paymentMethods.length) %
+                        paymentMethods.length;
+                      handleSelectPayment(paymentMethods[prevIndex]);
+                    } else if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleSelectPayment(method);
+                    }
+                  }}
+                />
+                <Label
+                  htmlFor={method}
+                  className="cursor-pointer select-none focus:outline-none"
+                >
                   {method === "card"
                     ? "Cartão de Crédito"
                     : method === "boleto"

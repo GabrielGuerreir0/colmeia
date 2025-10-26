@@ -22,6 +22,18 @@ The goal is to implement a smooth and predictable user experience, including aut
 - Checkout access blocked for unauthenticated users.
 - Simple field validation with error messages.
 
+- **Mocked Users:**
+
+  **TI User:**
+
+  - Email: `ti@colmeia.io`
+  - Password: `Colmeia`
+
+  **Regular User:**
+
+  - Name: `Gabriel Guerrero`
+  - Email: `gabriel@example.com`
+
 ### 2) Product Selection
 
 - Simple product list with prices.
